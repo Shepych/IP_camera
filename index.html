@@ -3,13 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link href="https://vjs.zencdn.net/8.5.2/video-js.css" rel="stylesheet" />
 </head>
 <body>
-<!-- работает только в сафари и возможно на айфонах для других браузеров нужна JS библиотека -->
-  <video controls>
-    <source src="hls/index.m3u8" type="application/x-mpegURL">
-  </video>
-
+    <!-- Без библиотеки работает только в сафари и возможно на айфонах, для других браузеров нужна JS библиотека -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+    <video controls id="video"></video>
+    <script>
+        var video = document.getElementById('video');
+        var videoSrc = '/hls/index.m3u8';
+        //
+        // First check for native browser HLS support
+        //
+        if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = videoSrc;
+            //
+            // If no native HLS support, check if HLS.js is supported
+            //
+        } else if (Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+        }
+    </script>
 </body>
 </html>
